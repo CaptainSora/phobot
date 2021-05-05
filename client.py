@@ -5,8 +5,9 @@ from discord import Activity, ActivityType, Embed, Intents
 from discord.ext import commands
 from dotenv import load_dotenv
 
+import reminders
 import tasks
-from SpellingBee import bee
+import SpellingBee.bee
 
 load_dotenv()
 API_ACCESS = getenv('API_ACCESS')
@@ -25,6 +26,18 @@ intents.members = True
 bot = commands.Bot(command_prefix=p, intents=intents)
 bot.remove_command('help')
 
+# Helper function
+async def get_dm_channel(userid):
+    user = bot.get_user(userid)
+    if user is None:
+        print(f"Failed to get user with id {userid}")
+        return None
+    dm_channel = user.dm_channel
+    if dm_channel is None:
+        dm_channel = await user.create_dm()
+    backup_channel = bot.get_channel(837090104576835584)
+    return dm_channel, backup_channel
+
 @bot.event
 async def on_ready():
     print("phobot is ready to rumble")
@@ -34,6 +47,7 @@ async def on_ready():
             type=ActivityType.watching
         )
     )
+    await reminders.send_reminders(get_dm_channel)
     bot_channel = bot.get_channel(837755961963053146)
     await bot_channel.send("honk")
 
@@ -107,11 +121,6 @@ async def report(ctx, *args):
             (r.name, r.color.value) for r in user.roles if r.name in ROLES
         ]
     await tasks.get_report(ctx, user, colors)
-
-
-@bot.command(name='remindme', aliases=['rem'])
-async def remind_me(ctx, *args):
-    await ctx.send("Hi yes I am reminding you now")
 
 @bot.command(name='positions', aliases=['pos'])
 async def positions(ctx, *args):
@@ -225,8 +234,6 @@ async def on_message(message):
         )
     elif "late" in args:
         await message.channel.send("Early bird gets the worm!")
-    elif "task" in args or "tasks" in args:
-        await message.channel.send("I store tasks too! Use '!dashboard'")
     elif "dashboard" in args:
         await message.channel.send("Use '!dashboard'")
 

@@ -61,17 +61,13 @@ async def add_task(ctx, args):
         return
     # Complete
     embed.color = GREEN
-    database.insert_task(arglist[0], arglist[1], assigned_to_list, arglist[3])
+    task_id = database.insert_task(
+        arglist[0], arglist[1], assigned_to_list, arglist[3]
+    )
     embed.description = (
-        "Successfully added task to database."
+        f"Successfully added task ID:{task_id} to database."
     )
     await ctx.send(embed=embed)
-    # Testing
-    try:
-        tasks = database.get_tasks(sel="max(task_id)")
-        print(tasks[0])
-    except IndexError:
-        print("Index failed")
 
 async def get_dashboard(ctx, user, colors):
     tasks = sorted(

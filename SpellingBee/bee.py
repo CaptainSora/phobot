@@ -80,7 +80,7 @@ async def spelling_bee(ctx, args):
     if not args:
         embed.description = (
             "To submit an answer:\n"
-            ".bee [answer]\n\n"
+            "!bee [answer]\n\n"
             "Your answer must:\n"
             "1. Only use the letters povided\n"
             "   (You can reuse letters!)\n"
