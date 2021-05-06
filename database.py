@@ -124,16 +124,43 @@ def get_reminders():
 
 # def temp_sql():
 #     create_connection()
-#     sql_modify_team = (
-#         "UPDATE tasks SET task_team = ? WHERE task_id = ?"
-#     )
-#     values = [
-#         ("Videography", 8),
-#         ("Videography", 9),
-#         ("Videography", 10),
-#         ("Videography", 71)
-#     ]
-#     CONN.executemany(sql_modify_team, values)
+#     # Modify all tasks
+#     tasks = get_tasks()
+#     for t in tasks:
+#         sql_modify_tasks = (
+#             "UPDATE tasks SET assigned_to = ? WHERE task_id = ?"
+#         )
+#         values = (t['assigned_to'].replace('!', ''), t['task_id'])
+#         CONN.execute(sql_modify_tasks, values)
+#     # Modify all reminders
+#     reminders = get_reminders()
+#     for r in reminders:
+#         sql_modify_reminders = (
+#             "UPDATE reminders SET assigned_to = ? WHERE rem_id = ?"
+#         )
+#         values = (r['assigned_to'].replace('!', ''), r['rem_id'])
+#         CONN.execute(sql_modify_reminders, values)
 #     CONN.commit()
+
+# def temp_sql():
+#     create_connection()
+#     CONN2 = sqlite3.connect('yearbook_backup.db')
+#     CONN2.row_factory = sqlite3.Row
+#     task_backup = CONN2.execute("SELECT * FROM tasks")
+#     for t in task_backup:
+#         if t['task_id'] == 16:
+#             continue
+#         sql_fix_at = (
+#             "UPDATE tasks SET assigned_to = ? WHERE task_id = ?"
+#         )
+#         values = (t['assigned_to'].replace('!', ''), t['task_id'])
+#         CONN.execute(sql_fix_at, values)
+#     manual_values = [
+#         ("<@414941009131339790>", 72),
+#         ("<@330188050275631105>", 73)
+#     ]
+#     CONN.executemany(sql_fix_at, manual_values)
+#     CONN.commit()
+    
 
 # temp_sql()

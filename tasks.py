@@ -42,7 +42,7 @@ async def add_task(ctx, args):
         await ctx.send(embed=embed)
         return
     # Parameter 3
-    assigned_to_list = [s.strip() for s in arglist[2].split()]
+    assigned_to_list = [s.strip().replace('!', '') for s in arglist[2].split()]
     if not all([s[0] == "<" and s[-1] == ">" for s in assigned_to_list]):
         embed.description = (
             "Parameter 3: 'assigned to' must be a list of member pings."
@@ -87,7 +87,7 @@ async def get_dashboard(ctx, user, colors):
         embed.color = colors[0][1]
     for t in tasks:
         assigned_to_list = t['assigned_to'].split(',')
-        if f"<@!{user.id}>" not in assigned_to_list:
+        if f"<@{user.id}>" not in assigned_to_list:
             continue
         # Emoji formatting
         cur_time = datetime.now()
@@ -105,7 +105,7 @@ async def get_dashboard(ctx, user, colors):
         )
     await ctx.send(embed=embed)
 
-async def get_report(ctx, user, colors):
+async def get_report(ctx, user, colors, ping=False):
     tasks = sorted(
         database.get_tasks(),
         key=lambda t: datetime.strptime(t['due_date'], "%b %d, %H:%M")
@@ -130,6 +130,10 @@ async def get_report(ctx, user, colors):
         embed.color = colors[0][1]
     numfields = 0
     page = 1
+    if ping:
+        await ctx.send(
+            f"<@{user.id}>, <@330188050275631105> - Automated report"
+        )
     for t in tasks:
         assigned_to_list = t['assigned_to'].split(',')
         if colors[0][0] != t['task_team']:
@@ -183,10 +187,10 @@ async def complete_task(ctx, args):
         )
         await ctx.send(embed=embed)
         return
-    assigned_to = [int(i[3:-1]) for i in tasks[0]['assigned_to'].split(',')]
+    assigned_to = [int(i[2:-1]) for i in tasks[0]['assigned_to'].split(',')]
     if user_id not in assigned_to:
         embed.description = (
-            f"Task with ID:{task_id} not assigned to <@!{user_id}>."
+            f"Task with ID:{task_id} not assigned to <@{user_id}>."
         )
         await ctx.send(embed=embed)
         return

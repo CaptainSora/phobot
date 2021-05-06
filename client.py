@@ -1,3 +1,4 @@
+import asyncio
 from os import getenv
 from random import choice, random
 
@@ -26,7 +27,7 @@ intents.members = True
 bot = commands.Bot(command_prefix=p, intents=intents)
 bot.remove_command('help')
 
-# Helper function
+# Helper functions
 async def get_dm_channel(userid):
     user = bot.get_user(userid)
     if user is None:
@@ -47,9 +48,28 @@ async def on_ready():
             type=ActivityType.watching
         )
     )
-    await reminders.send_reminders(get_dm_channel)
     bot_channel = bot.get_channel(837755961963053146)
     await bot_channel.send("honk")
+    # Get users for report
+    users = [
+        # FSgt Zheng, Allen
+        [279776665628835851],
+        # WO2 Zou, Alice     WO2 Kang, Angela
+        [273207697145462786, 809510270132944916],
+        # WO2 Yu, Adrian     WO2 Kwok, Felix
+        [392471317086994436, 182601885046276097],
+        # FSgt Ye, Dawson    FSgt Guo, William
+        [603002470398034000, 498320836772757505]
+    ]
+    users = [
+        [bot_channel.guild.get_member(uid) for uid in team]
+        for team in users 
+    ]
+    while True:
+        await reminders.send_reminders(get_dm_channel)
+        await reminders.send_report(bot_channel, users)
+        await asyncio.sleep(30 * 60)
+
 
 
 @bot.command(name='help', aliases=['h'])
@@ -224,7 +244,8 @@ async def on_message(message):
         if random() < 0.1:
             await message.channel.send("I'm always watching you.")
     elif "phobot" in args:
-        await message.channel.send("You called?")
+        if random() < 0.1:
+            await message.channel.send("You called?")
     elif "aot" in args:
         await message.channel.send("MIKASA?")
     elif "armin" in args:
