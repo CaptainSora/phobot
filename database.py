@@ -85,6 +85,39 @@ def complete_task(task_id):
     CONN.execute(sql_remove_reminders, values)
     CONN.commit()
 
+def task_change_due(task_id, due):
+    create_connection()
+    # change due date of task
+    sql_change_date = (
+        "UPDATE tasks SET due_date = ? WHERE task_id = ?"
+    )
+    values = (due, task_id)
+    CONN.execute(sql_change_date, values)
+    # delete reminders
+    sql_delete_reminders = (
+        "DELETE FROM reminders WHERE task_id = ?"
+    )
+    values = (task_id,)
+    CONN.execute(sql_delete_reminders, values)
+    # create new reminders (if not complete)
+    sql_get_task = (
+        "SELECT * FROM tasks WHERE task_id = ?"
+    )
+    task = CONN.execute(sql_get_task, values).fetchone()
+    if task['complete_date'] is None:
+        rem_date = datetime.strptime(due, "%b %d, %H:%M") - timedelta(days=1)
+        rem_date_str = rem_date.strftime("%b %d, %H:%M")
+        sql_add_reminders = (
+            "INSERT INTO reminders(rem_type, task_id, task_name, assigned_to, "
+            "rem_date) VALUES (?,?,?,?,?)"
+        )
+        rem_values = [
+            (1, task_id, task['task_name'], task['assigned_to'], rem_date_str),
+            (0, task_id, task['task_name'], task['assigned_to'], due)
+        ]
+        CONN.executemany(sql_add_reminders, rem_values)
+    CONN.commit()
+
 def remove_task(task_id):
     create_connection()
     # Remove task
@@ -162,5 +195,22 @@ def get_reminders():
 #     CONN.executemany(sql_fix_at, manual_values)
 #     CONN.commit()
     
+# def temp_sql():
+#     create_connection()
+#     sql_edit_gd = (
+#         "UPDATE tasks SET task_team = 'Graphic Design' WHERE task_id = ?"
+#     )
+#     values = [
+#         (74,),
+#         (75,),
+#         (76,),
+#         (77,),
+#         (78,),
+#         (79,),
+#         (80,),
+#         (81,),
+#     ]
+#     CONN.executemany(sql_edit_gd, values)
+#     CONN.commit()
 
 # temp_sql()

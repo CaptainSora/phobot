@@ -5,6 +5,13 @@ from discord import Forbidden
 import database
 import tasks
 
+ROLES = {
+    # Name: (id, color)
+    "Producers": (834978711055892530, 10181046),
+    "Writers": (836115355621392384, 3447003),
+    "Graphic Design": (836115375510781972, 15158332),
+    "Videography": (837158523221049386, 3066993)
+}
 
 async def send_reminders(get_dm_channel):
     rem_ids = []
@@ -44,8 +51,9 @@ async def send_report(users, pho_channel):
     if cur_time.hour != 9 or cur_time.minute >= 30:
         return
     for user, dm_ch in users:
+        # dm_ch is (dm_ch, backup_ch)
         colors = [
             (r.name, r.color.value) for r in user.roles if r.name in ROLES
         ]
-        await tasks.get_report(dm_ch, user, colors)
+        await tasks.get_report(dm_ch[0], user, colors)
         await tasks.get_report(pho_channel, user, colors)

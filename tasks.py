@@ -62,7 +62,7 @@ async def add_task(ctx, args):
     # Complete
     embed.color = GREEN
     task_id = database.insert_task(
-        arglist[0], arglist[1], assigned_to_list, arglist[3]
+        arglist[0], arglist[1].title(), assigned_to_list, arglist[3]
     )
     embed.description = (
         f"Successfully added task ID:{task_id} to database."
@@ -222,5 +222,46 @@ async def remove_task(ctx, args):
     embed.color = GREEN
     embed.description = (
         f"Successfully removed task id {task_id}."
+    )
+    await ctx.send(embed=embed)
+
+async def change_task_due(ctx, args):
+    embed=Embed(
+        title='Change Task Due Date',
+        color=RED
+    )
+    if len(args) < 2 or not args[0].isdecimal():
+        embed.description = (
+            "Function usage:\n"
+            "!changedue [id] [due date]\n"
+            "id: the task id\n"
+            "due date: date + time in the format 'Jan 1, 23:30'"
+        )
+        await ctx.send(embed=embed)
+        return
+    # Param 1
+    task_id = int(args[0])
+    tasks = database.get_tasks(ext=f"WHERE task_id = {task_id}")
+    if not tasks:
+        embed.description = (
+            f"Task with ID:{task_id} not found."
+        )
+        await ctx.send(embed=embed)
+        return
+    # Param 2
+    due_str = ' '.join(args[1:])
+    try:
+        due_date = datetime.strptime(due_str, "%b %d, %H:%M")
+    except ValueError:
+        embed.description = (
+            "Parameter 2: 'due date' must be a date and time in the format "
+            "'Jan 1, 23:30'."
+        )
+        await ctx.send(embed=embed)
+        return
+    database.task_change_due(task_id, due_str)
+    embed.color = GREEN
+    embed.description = (
+        f"Task with ID:{task_id} changed due date to {due_str}."
     )
     await ctx.send(embed=embed)

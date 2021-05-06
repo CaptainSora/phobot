@@ -61,13 +61,13 @@ async def on_ready():
         498320836772757505  # FSgt Guo, William
     ]
     users = [
-        (bot_channel.guild.get_member(uid), get_dm_channel(uid))
+        (bot_channel.guild.get_member(uid), await get_dm_channel(uid))
         for uid in userids 
     ]
-    pho_channel = get_dm_channel(330188050275631105)
+    pho_channel = await get_dm_channel(330188050275631105)
     while True:
         await reminders.send_reminders(get_dm_channel)
-        await reminders.send_report(users, pho_channel)
+        await reminders.send_report(users, pho_channel[0])
         await asyncio.sleep(30 * 60)
 
 
@@ -174,6 +174,11 @@ async def false_add_task(ctx, *args):
 async def rem_task(ctx, *args):
     if ctx.message.author.id in authorized:
         await tasks.remove_task(ctx, args)
+
+@bot.command(name='changedue')
+async def change_due(ctx, *args):
+    if ctx.message.author.id in authorized:
+        await tasks.change_task_due(ctx, args)
 
 # FUN COMMANDS
 
