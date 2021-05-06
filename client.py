@@ -51,25 +51,24 @@ async def on_ready():
     bot_channel = bot.get_channel(837755961963053146)
     await bot_channel.send("honk")
     # Get users for report
-    users = [
-        # FSgt Zheng, Allen
-        [279776665628835851],
-        # WO2 Zou, Alice     WO2 Kang, Angela
-        [273207697145462786, 809510270132944916],
-        # WO2 Yu, Adrian     WO2 Kwok, Felix
-        [392471317086994436, 182601885046276097],
-        # FSgt Ye, Dawson    FSgt Guo, William
-        [603002470398034000, 498320836772757505]
+    userids = [
+        279776665628835851, # FSgt Zheng, Allen
+        273207697145462786, # WO2 Zou, Alice 
+        809510270132944916, # WO2 Kang, Angela
+        392471317086994436, # WO2 Yu, Adrian
+        182601885046276097, # WO2 Kwok, Felix
+        603002470398034000, # FSgt Ye, Dawson
+        498320836772757505  # FSgt Guo, William
     ]
     users = [
-        [bot_channel.guild.get_member(uid) for uid in team]
-        for team in users 
+        (bot_channel.guild.get_member(uid), get_dm_channel(uid))
+        for uid in userids 
     ]
+    pho_channel = get_dm_channel(330188050275631105)
     while True:
         await reminders.send_reminders(get_dm_channel)
-        await reminders.send_report(bot_channel, users)
+        await reminders.send_report(users, pho_channel)
         await asyncio.sleep(30 * 60)
-
 
 
 @bot.command(name='help', aliases=['h'])

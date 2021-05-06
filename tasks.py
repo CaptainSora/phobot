@@ -105,7 +105,7 @@ async def get_dashboard(ctx, user, colors):
         )
     await ctx.send(embed=embed)
 
-async def get_report(ctx, user, colors, ping=False):
+async def get_report(ctx, user, colors):
     tasks = sorted(
         database.get_tasks(),
         key=lambda t: datetime.strptime(t['due_date'], "%b %d, %H:%M")
@@ -130,10 +130,6 @@ async def get_report(ctx, user, colors, ping=False):
         embed.color = colors[0][1]
     numfields = 0
     page = 1
-    if ping:
-        await ctx.send(
-            f"<@{user.id}>, <@330188050275631105> - Automated report"
-        )
     for t in tasks:
         assigned_to_list = t['assigned_to'].split(',')
         if colors[0][0] != t['task_team']:

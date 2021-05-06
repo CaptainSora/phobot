@@ -39,13 +39,13 @@ async def send_reminders(get_dm_channel):
     # Remove reminders if sent
     database.remove_reminders(rem_ids)
 
-async def send_report(channel, users):
+async def send_report(users, pho_channel):
     cur_time = datetime.now()
     if cur_time.hour != 9 or cur_time.minute >= 30:
         return
-    for team in users:
-        user = team[0]
+    for user, dm_ch in users:
         colors = [
             (r.name, r.color.value) for r in user.roles if r.name in ROLES
         ]
-        await tasks.get_report(channel, team, colors, ping=True)
+        await tasks.get_report(dm_ch, user, colors)
+        await tasks.get_report(pho_channel, user, colors)
