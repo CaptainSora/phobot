@@ -13,6 +13,8 @@ ROLES = {
     "Videography": (837158523221049386, 3066993)
 }
 
+LAST_REPORT = None
+
 async def send_reminders(get_dm_channel):
     rem_ids = []
     cur_time = datetime.now()
@@ -47,8 +49,11 @@ async def send_reminders(get_dm_channel):
     database.remove_reminders(rem_ids)
 
 async def send_report(users, pho_channel):
+    global LAST_REPORT
     cur_time = datetime.now()
-    if cur_time.hour != 9 or cur_time.minute >= 30:
+    cur_date = cur_time.strftime("%b %d")
+    # Check for 9AM, and if sent already today
+    if cur_time.hour != 9 or LAST_REPORT == cur_date:
         return
     for user, dm_ch in users:
         # dm_ch is (dm_ch, backup_ch)
@@ -57,3 +62,4 @@ async def send_report(users, pho_channel):
         ]
         await tasks.get_report(dm_ch[0], user, colors)
         await tasks.get_report(pho_channel, user, colors)
+    LAST_REPORT = cur_date

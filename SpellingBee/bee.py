@@ -10,7 +10,7 @@ WORDS = None
 def load_words():
     global WORDS
     if WORDS is None:
-        with open('SpellingBee/scrabble_words.txt') as f:
+        with open('SpellingBee/twl06.txt') as f:
             WORDS = set([w.lower() for w in f.read().split('\n')])
 
 def num_valid_words(letters):
