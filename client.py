@@ -8,7 +8,6 @@ from dotenv import load_dotenv
 
 import reminders
 import tasks
-import SpellingBee.bee
 
 load_dotenv()
 API_ACCESS = getenv('API_ACCESS')
@@ -214,14 +213,6 @@ async def corner(ctx, *args):
     chui = 279821782670639105
     if ctx.message.author.id == chui:
         await ctx.send("<@603002470398034000> GO TO YOUR CORNER")
-
-@bot.command(name='bee', aliases=['b'])
-async def spelling_bee_wrapper(ctx, *args):
-    await SpellingBee.bee.spelling_bee(ctx, args)
-
-@bot.command(name='beelb', aliases=['blb'])
-async def spelling_bee_lb_wrapper(ctx, *args):
-    await SpellingBee.bee.bee_leaderboards(ctx, args)
 
 @bot.event
 async def on_message(message):
