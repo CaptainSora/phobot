@@ -8,17 +8,18 @@ from dotenv import load_dotenv
 
 import reminders
 import tasks
+from vars import CHANNELS, ROLES
 
 load_dotenv()
 API_ACCESS = getenv('API_ACCESS')
 authorized = [278589912184258562, 330188050275631105]
-ROLES = {
-    # Name: (id, color)
-    "Producers": (834978711055892530, 10181046),
-    "Writers": (836115355621392384, 3447003),
-    "Graphic Design": (836115375510781972, 15158332),
-    "Videography": (837158523221049386, 3066993)
-}
+# ROLES = {
+#     # Name: (id, color)
+#     "Producers": (834978711055892530, 10181046),
+#     "Writers": (836115355621392384, 3447003),
+#     "Graphic Design": (836115375510781972, 15158332),
+#     "Videography": (837158523221049386, 3066993)
+# }
 
 p = '!'
 intents = Intents.default()
@@ -47,23 +48,8 @@ async def on_ready():
             type=ActivityType.watching
         )
     )
-    bot_channel = bot.get_channel(837755961963053146)
+    bot_channel = bot.get_channel(CHANNELS["admin"])
     await bot_channel.send("honk")
-    # Get users for report
-    # userids = [
-    #     279776665628835851, # FSgt Zheng, Allen
-    #     273207697145462786, # WO2 Zou, Alice 
-    #     809510270132944916, # WO2 Kang, Angela
-    #     392471317086994436, # WO2 Yu, Adrian
-    #     182601885046276097, # WO2 Kwok, Felix
-    #     603002470398034000, # FSgt Ye, Dawson
-    #     498320836772757505  # FSgt Guo, William
-    # ]
-    # users = [
-    #     (bot_channel.guild.get_member(uid), await get_dm_channel(uid))
-    #     for uid in userids 
-    # ]
-    # pho_channel = await get_dm_channel(330188050275631105)
     # while True:
     #     await reminders.send_reminders(get_dm_channel)
     #     await reminders.send_report(users, pho_channel[0])

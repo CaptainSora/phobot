@@ -4,14 +4,15 @@ from discord import Forbidden
 
 import database
 import tasks
+from vars import ROLES
 
-ROLES = {
-    # Name: (id, color)
-    "Producers": (834978711055892530, 10181046),
-    "Writers": (836115355621392384, 3447003),
-    "Graphic Design": (836115375510781972, 15158332),
-    "Videography": (837158523221049386, 3066993)
-}
+# ROLES = {
+#     # Name: (id, color)
+#     "Producers": (834978711055892530, 10181046),
+#     "Writers": (836115355621392384, 3447003),
+#     "Graphic Design": (836115375510781972, 15158332),
+#     "Videography": (837158523221049386, 3066993)
+# }
 
 LAST_REPORT = None
 

@@ -3,15 +3,16 @@ from datetime import datetime
 from discord import Embed
 
 import database
+from vars import RED, GREEN, ROLES
 
-RED = 0xd60606
-GREEN = 0x00bd5b
-ROLES = {
-    "Producers": 834978711055892530,
-    "Writers": 836115355621392384,
-    "Graphic Design": 836115375510781972,
-    "Videography": 837158523221049386
-}
+# RED = 0xd60606
+# GREEN = 0x00bd5b
+# ROLES = {
+#     "Producers": 834978711055892530,
+#     "Writers": 836115355621392384,
+#     "Graphic Design": 836115375510781972,
+#     "Videography": 837158523221049386
+# }
 
 async def add_task(ctx, args):
     embed=Embed(
